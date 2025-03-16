@@ -1,5 +1,8 @@
+type classGridProps = {}
 export default function ClassGrid(){
     return(
-        <div></div>
+        <div>
+            1
+        </div>
     )
 }
