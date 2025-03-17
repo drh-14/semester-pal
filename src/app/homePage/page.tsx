@@ -6,7 +6,6 @@ export default function Homepage(){
         <div className = 'flex flex-col justify-center items-center gap-16'>
             <Navbar></Navbar>
             <Button variant = 'contained'>Add a Semester</Button>
-            <ClassGrid></ClassGrid>
 
 
         </div>
