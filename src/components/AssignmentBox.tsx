@@ -10,6 +10,8 @@ export default function AssignmentBox(props: {assignments: assignment[]}){
                 <div>{assignment.name}</div>
                 <div>{assignment.grade}%</div>
                 <div>{assignment.category}</div>
+                <Button variant = 'contained'>Modify Assignment</Button>
+                <Button variant = 'contained'>Remove Assignment</Button>
             </div>)}      
             </div>
             </div>
