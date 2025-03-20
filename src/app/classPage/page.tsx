@@ -11,10 +11,9 @@ export default function ClassPage(){
         <div className = 'flex flex-col gap-8 items-center text-4xl'>
             <Navbar></Navbar>
             <h1>Your current grade:{grade}%</h1>
-            <Button onClick = {() => setOpenGradeCalculation(true)}>View Grade Calculation</Button>
+            <Button variant = 'contained' onClick = {() => setOpenGradeCalculation(true)}>View Grade Calculation</Button>
             <AssignmentBox assignments={[{name: 'HW1', grade: 95, category: 'Homework'}]}></AssignmentBox>
             <SyllabusBox categories = {[{name: 'Homework', weight: 35}, {name: 'Midterm', weight: 50}]}></SyllabusBox>
-
         </div>
     )
     
