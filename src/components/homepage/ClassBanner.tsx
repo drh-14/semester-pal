@@ -7,6 +7,18 @@ import DialogBox from '@/components/DialogBox';
 export default function ClassBanner(props: {color: string, grade: number, courseName: string}){
     const router = useRouter();
     const [openDeleteClass, setOpenDeleteClass] = useState(false);
+    const [username, setUsername] = useState('');
+    const [semester, setSemester] = useState('');
+
+    const deleteClass = async () => {
+        const response = await fetch('/api/modifyDatabase/removeClass', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: username, semesterName: semester, courseName: props.courseName})
+        });
+        setOpenDeleteClass(false);
+    }
+
     return(
         <div>
         <Button sx={{border: '2px solid black', color: 'black', backgroundColor:'blueviolet', width: '18rem', height:'100%', padding: 4, paddingBottom: 1, display: 'flex', flexDirection: 'column', wordBreak:'break-all', alignItems: 'center', gap: 4, borderRadius:4}} onClick = {() => router.push('./classPage')}>
@@ -17,7 +29,7 @@ export default function ClassBanner(props: {color: string, grade: number, course
         <DialogBox width = "60vh" height = "20vh" open = {openDeleteClass} closeFunction = {() => setOpenDeleteClass(false)}>
             <div className = 'flex flex-col gap-4 w-4/5 text-lg items-center'>
             <div>Are you sure you want to delete this class?</div>
-            <Button variant = 'contained'>Yes</Button>
+            <Button onClick = {deleteClass} variant = 'contained'>Yes</Button>
             </div>
         </DialogBox>
         </div>

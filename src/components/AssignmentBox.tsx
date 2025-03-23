@@ -35,7 +35,7 @@ export default function AssignmentBox(props: {assignments: assignment[]}){
                 <Button onClick = {() => setOpenEditAssignment(true)} sx ={{color:'black'}}><EditIcon fontSize = "medium"></EditIcon></Button>
                 <DialogBox width = "60vh" height = "40vh" open={openEditAssignment} closeFunction = {() => setOpenEditAssignment(false)}>
                     <div className = 'flex flex-col gap-4 w-4/5 items-center'>
-                    <input className = 'border-2 border-solid border-black rounded-md p-4 w-full' placeholder = "Enter Assignment Name"></input>
+                <input className = 'border-2 border-solid border-black rounded-md p-4 w-full' placeholder = "Enter Assignment Name"></input>
                 <input className = 'border-2 border-solid border-black rounded-md p-4 w-full' placeholder = "Enter Grade"></input>
                 <input className = 'border-2 border-solid border-black rounded-md p-4 w-full' placeholder = "Enter Category"></input>
                 <Button variant = 'contained'>Edit Assignment</Button>
