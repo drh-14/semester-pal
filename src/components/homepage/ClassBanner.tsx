@@ -7,18 +7,6 @@ import DialogBox from '@/components/DialogBox';
 export default function ClassBanner(props: {color: string, grade: number, courseName: string}){
     const router = useRouter();
     const [openDeleteClass, setOpenDeleteClass] = useState(false);
-
-    const addClass = async (username:string, semesterName:string, courseName:string) => {
-        const course = {user: username, semester: semesterName, course: courseName};
-        const {error} = await supabase.from("users").insert(course);
-        if(error){
-            console.log(error);
-        }
-        else{
-            setCourses([...courses, {color:'', grade: 0, courseName: courseName}])
-        }
-    };
-
     return(
         <div>
         <Button sx={{border: '2px solid black', color: 'black', backgroundColor:'blueviolet', width: '18rem', height:'100%', padding: 4, paddingBottom: 1, display: 'flex', flexDirection: 'column', wordBreak:'break-all', alignItems: 'center', gap: 4, borderRadius:4}} onClick = {() => router.push('./classPage')}>

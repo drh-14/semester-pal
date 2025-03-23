@@ -5,60 +5,34 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DialogBox from '@/components/DialogBox';
 import {FormControlLabel, Checkbox, FormGroup} from '@mui/material';
-export default function SemesterBar(props: {semesters: string[]}){
+import { createClient } from '@supabase/supabase-js';
+export default function SemesterBar(props: {semesters: string[], currSemester:string, setCurrSemester: (argv:string) => void}){
     const [openAddSemester, setOpenAddSemester] = useState(false);
     const [openRemoveSemester, setOpenRemoveSemester] = useState(false);
     const [removedSemesters, setRemovedSemesters] = useState<string[]>([]);
     const [semesters, setSemesters] = useState<string[]>([]);
+    const [username, setUsername] = useState('');
+    const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
 
     useEffect(() => {
-        fetchSemesters(username);
+        setSemesters(props.semesters)
     }, []);
 
     const fetchSemesters = async (username:string) => {
-        try{
-            const res = await supabase.from("users").select("semester").match({user:username});
-            let data: string[] = [];
-            if(!res.data){
-                return;
+            const {data, error} = await supabaseClient.from("users").select("semester").match({user:username});
+            if(data){
+                setSemesters(data.map(element => element.semester));
             }
-            res.data.forEach((element) => {
-                data.push(element.semester);
-            })
-            setSemesters(data);
-        }
-        catch(error){
-            console.log(error);
-        }
+            if(error){
+                console.log(error);
+            }
     }
-
-    const addSemester = async (username:string, semesterName:string) => {
-        const {error} = await supabase.from("users").insert({user: username, semester: semesterName});
-        if(error){
-            console.log(error);
-        }
-        else{
-            setSemesters([...semesters, semesterName]);
-        }
-    };
-
-    const removeSemesters = async (username:string, semesters:string[]) => {
-        const {error} = await supabase.from("users").delete().eq("user", username).in('semester', removedSemesters);
-        supabase.from("courses").delete().eq("user", username).in('semester', removedSemesters);
-        supabase.from("assignments").delete().eq("user", username).in('semester', removedSemesters);
-        if(error){
-            console.log(error);
-        }
-        else{
-            setSemesters(semesters.filter(semester => !removedSemesters.includes(semester)));
-        }
-    };
 
     return(
         <div className = 'flex gap-4 max-w-1/4 overflow-auto text-4xl items-center border-2 border-solid border-black p-4 rounded-md'>
             <div className = 'flex gap-8'>
             {props.semesters.map((semester) => 
-            <Button size = "large" sx ={{fontSize:'1.8vh', color: 'black'}} key = {semester}>{semester}</Button>)}
+            <Button onClick = {() => props.setCurrSemester(semester)} size = "large" sx ={{fontSize:'1.8vh', color: 'black', backgroundColor: semester === props.currSemester ? 'orange': null}} key = {semester}>{semester}</Button>)}
             </div>
             <div>
             <Button onClick = {() => setOpenAddSemester(true)} sx={{padding: 0}}><AddIcon></AddIcon></Button>

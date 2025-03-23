@@ -11,6 +11,7 @@ export default function AssignmentBox(props: {assignments: assignment[]}){
     const [openEditAssignment, setOpenEditAssignment] = useState(false);
     const [openDeleteAssignment, setOpenDeleteAssignment] = useState(false);
     const [openGradingBreakdown, setOpenGradingBreakdown] = useState(false);
+
     return(
         <div>
             <div className = 'w-full flex flex-col max-h-96 overflow-auto gap-4 items-center border-2 border-black border-solid p-4'>

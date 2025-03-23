@@ -9,70 +9,50 @@ import DialogBox from '@/components/DialogBox';
 export default function ClassPage(){
     const [grade, setGrade] = useState();
     const [openGradeCalculation, setOpenGradeCalculation] = useState(false);
-    const [assignments, setAssignments] = useState<{assignmentName:string, category:string, grade: number}[]>([]);
-    const supabaseURL = 'https://wvvnzyorhpzgqrmffsyk.supabase.co';
-    const supabaseKey = process.env.SUPABASE_KEY || "53w5";
-    const supabase = createClient(supabaseURL, supabaseKey);
+    const [assignments, setAssignments] = useState<{assignment:string, category:string, grade: number}[]>([]);
+    const [course, setCourse] = useState('');
+    const [semester, setSemester] = useState('');
+    const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
+    const [username, setUsername] = useState('');
+    const [gradeCalculation, setGradeCalculation] = useState<{grade: number, category: string}[]>();
+    const [gradingBreakdown, setGradingBreakdown] = useState<{category:string, weight: number}[]>();
 
     useEffect(() => {
-        fetchAssignments();
-        getGradeBreakdown();
-        getGradeCalculation();
+        getFinalGrade(username, semester, course);
+        fetchAssignments(username, semester, course);
+        getGradeCalculation(username, semester, course);
     }, []);
     
     const getFinalGrade = async (username:string, semesterName:string, courseName: string) => {
-        const {data, error} = await supabase.from("users").select('grade').match({user:username, semester: semesterName, course: courseName});
+        const {data, error} = await supabaseClient.from("users").select('grade').match({user:username, semester: semesterName, course: courseName});
         if(data){
-            return data[0].grade;
+            setGrade(data[0].grade);
         }
         if(error){
             console.log(error);
         }
     };
 
-    const fetchAssignments = () => {
-        
+    const fetchAssignments = async (username:string, semesterName:string, courseName: string) => {
+        const {data, error} = await supabaseClient.from("assignments").select('assignment, grade, category').match({user: username, semester: semesterName, course: courseName})
+        if(data){
+            setAssignments(data);
+
+        }
+        if(error){
+            console.log(error);
+        }
     };
 
-
     const getGradeCalculation = async (username:string, semesterName:string, courseName:string) => {
-        const {data, error} = await supabase.from("courses").select('category, grade').match({user: username, semester: semesterName, course: courseName});
+        const {data, error} = await supabaseClient.from("courses").select('category, grade').match({user: username, semester: semesterName, course: courseName});
         if(data){
-            return data;
+            setGradeCalculation(data);
         }
         else{
             console.log(error);
         }
     }
-
-    const getGradeBreakdown = async (username:string, semesterName:string, courseName:string) => {
-        const { data, error } = await supabase.from("courses").select('category, weight').match({user:username, semester: semesterName, course: courseName});
-        if(data){
-            return data;
-        }
-        console.log(error);
-    }
-
-    const addAssignment = async (username:string, semesterName:string, courseName:string, assignmentName:string, category: string, grade: number) => {
-        const { error } = await supabase.from("assignments").insert({user: username, semester: semesterName, course: courseName, assignment: assignmentName, grade: grade, category: category});
-        if(error){
-            console.log(error);
-        }
-    };
-
-    const modifyAssignment =  async (username:string, semesterName:string, courseName:string, assignmentName:string, newName:string, newCategory:string, newGrade: number) => {
-        const { error } = await supabase.from('assignments').update({assignment: newName, category: newCategory, grade: newGrade}).match({user: username, semester: semesterName, course: courseName, assignment: assignmentName});
-        if(error){
-            console.log(error);
-        }
-    };
-
-    const deleteAssignment = async (username: string, semesterName:string, courseName:string, assignmentName:string) => {
-        const {error} = await supabase.from("assignments").delete().match({user: username, semester: semesterName, course: courseName, assignment: assignmentName});
-        if(error){
-            console.log(error);
-        }
-    };
 
     return(
         <div className = 'flex flex-col gap-8 items-center text-4xl'>

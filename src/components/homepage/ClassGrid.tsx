@@ -4,24 +4,26 @@ import { Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import DialogBox from '@/components/DialogBox';
-export default function ClassGrid(props: {classes: {color:string, grade: number, courseName:string}[]}){
+import { createClient } from '@supabase/supabase-js';
+export default function ClassGrid(props: {classes: {color:string, grade: number, courseName:string}[], currSemester:string}){
+    const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
     const [openNewClass, setOpenNewClass] = useState(false);
+    const [courses, setCourses] = useState<{color:string, grade: number, courseName: string}[]>([]);
+    const [username, setUsername] = useState('');
 
     useEffect(() => {
-        fetchCourses(username, currSemester);
-    }, [currSemester]);
+        fetchCourses(username, props.currSemester);
+    }, []);
 
-    const removeClass = async (username:string, courseName:string) => {
-        const {error} = await supabase.from("users").delete().match({user: username, course: courseName});
-        supabase.from("assignments").delete().match({user: username, course: courseName});
-        supabase.from("courses").delete().match({user: username, course: courseName});
+    const fetchCourses = async (username:string, semesterName:string) => {
+        const {data, error} = await supabaseClient.from("users").select('color, grade, course').match({user: username, semester: semesterName});
+        if(data){
+            setCourses(data.map((element) => element.course));
+        }
         if(error){
             console.log(error);
         }
-        else{
-            setCourses(courses.filter(element => element.courseName !== courseName));
-        }
-    };
+    }
 
     return(
         <div className = 'grid grid-cols-2 gap-8 w-4/12 mb-8'>
