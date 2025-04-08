@@ -41,7 +41,7 @@ export default function ClassGrid(props: {classes: {color:string, grade: number,
             <Button onClick = {() => setOpenNewClass(true)} sx={{border: '2px solid black'}} className = 'flex flex-col items-center justify-center p-4 h-48 rounded-md'><AddIcon fontSize = "large"></AddIcon></Button>
             <DialogBox width = "45vh" height = "35vh" open = {openNewClass} closeFunction = {() => setOpenNewClass(false)}>
                 <div className = 'flex flex-col w-4/5 gap-8 items-center'>
-                <Button variant = 'contained'>Upload Syllabus</Button>
+                <Button component = "label" variant = 'contained'><div>Upload Syllabus</div><input className = 'hidden' type = 'file'></input></Button>
                 <Button onClick = {createClass} variant = 'contained'>Create Class</Button>                
                 </div>
             </DialogBox>

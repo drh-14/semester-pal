@@ -35,7 +35,7 @@ export default function SyllabusBox(props: {categories: {name: string, weight: n
       <div className = 'flex max-h-96 overflow-auto items-center flex-col gap-4 border-solid border-2 border-black rounded-md p-4 max-w-md w-md'>
         {props.categories.map((category) => <div className = 'flex gap-8' key = {category.name}>
           <div>{category.name}</div>
-          <div className = 'justify-self-end'>{category.weight}%</div>
+          <div className = 'justify-self-end'>{category.weight ? `${category.weight}%` : null}</div>
           <Button onClick = {() => setOpenModifyCategory(true)} sx ={{color: 'black'}}><EditIcon></EditIcon></Button>
           <DialogBox width = '60vh' height = '40vh' open={openModifyCategory} closeFunction={() => setOpenModifyCategory(false)}>
           <div className = 'flex flex-col items-center w-4/5 gap-8'>
@@ -45,6 +45,7 @@ export default function SyllabusBox(props: {categories: {name: string, weight: n
           </div>
         </DialogBox>
         </div> )}
+        <Button variant = 'contained'>Add Category</Button>
       </div>
     )
 }

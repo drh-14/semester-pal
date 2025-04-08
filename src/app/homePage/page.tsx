@@ -27,6 +27,10 @@ export default function Homepage(){
             console.log(error);
         }
 }
+
+    const getSyllabusInfo = async () => {
+
+    }
    
     return(
         <div className = 'flex flex-col justify-center items-center gap-8'>

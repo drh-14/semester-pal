@@ -15,6 +15,7 @@ export default function SemesterBar(props: {semesters: string[], currSemester:st
     const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
 
     useEffect(() => {
+        fetchSemesters(username)
         setSemesters(props.semesters)
     }, []);
 
