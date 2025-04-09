@@ -2,16 +2,15 @@
 import { Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import EditIcon from '@mui/icons-material/Edit';
 import DialogBox from '@/components/DialogBox';
+import SyllabusItem from '@/components/SyllabusItem';
 export default function SyllabusBox(props: {categories: {name: string, weight: number}[]}){
   const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
-  const [openGradingBreakdown, setOpenGradingBreakdown] = useState(false);
-  const [openModifyCategory, setOpenModifyCategory] = useState(false);
-  const [gradeBreakdown, setGradeBreakdown] = useState<{category:string, weight: number}[]>([]);
+  const [syllabus, setSyllabus] = useState<{category:string, weight: number}[]>([]);
   const [username, setUsername] = useState('');
   const [semester, setSemester] = useState('');
   const [course, setCourse] = useState('');
+  const [editSyllabusOpen, setEditSyllabusOpen] = useState(false);
 
   useEffect(() => {
     getGradeBreakdown(username, semester, course);
@@ -20,7 +19,7 @@ export default function SyllabusBox(props: {categories: {name: string, weight: n
   const getGradeBreakdown = async (username:string, semesterName:string, courseName:string) => {
     const { data, error } = await supabaseClient.from("courses").select('category, weight').match({user:username, semester: semesterName, course: courseName});
     if(data){
-        setGradeBreakdown(data);
+        setSyllabus(data);
     }
     if(error){
       console.log(error);
@@ -36,16 +35,13 @@ export default function SyllabusBox(props: {categories: {name: string, weight: n
         {props.categories.map((category) => <div className = 'flex gap-8' key = {category.name}>
           <div>{category.name}</div>
           <div className = 'justify-self-end'>{category.weight ? `${category.weight}%` : null}</div>
-          <Button onClick = {() => setOpenModifyCategory(true)} sx ={{color: 'black'}}><EditIcon></EditIcon></Button>
-          <DialogBox width = '60vh' height = '40vh' open={openModifyCategory} closeFunction={() => setOpenModifyCategory(false)}>
-          <div className = 'flex flex-col items-center w-4/5 gap-8'>
-          <input className = 'border-2 border-solid border-black rounded-md p-4 w-full' placeholder = "Enter Category Name"></input>
-          <input className = 'border-2 border-solid border-black rounded-md p-4 w-full' placeholder = "Enter Weight"></input>
-            <Button variant = 'contained'>Edit Category</Button>
+        </div> )}
+        <Button onClick = {() => setEditSyllabusOpen(true)} variant = 'contained'>Edit Syllabus</Button>
+        <DialogBox width = "50vh" height = "50vh" open = {editSyllabusOpen} closeFunction = {() => setEditSyllabusOpen(false)}>
+          <div className = 'flex flex-col items-center gap-8'>
+            {syllabus.map(item => <SyllabusItem syllabus = {syllabus} setSyllabus = {setSyllabus} syllabusItem = {item} key = {item.category}></SyllabusItem>)}
           </div>
         </DialogBox>
-        </div> )}
-        <Button variant = 'contained'>Add Category</Button>
       </div>
     )
 }
