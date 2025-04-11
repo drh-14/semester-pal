@@ -14,8 +14,15 @@ export default function Homepage(){
     const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
 
     useEffect(() => {
-        fetchSemesters(username);
-    }, [])
+        const fetchData = async () => {
+            const { data, error } = await supabaseClient.auth.getUser();
+            if(data && data.user){
+                console.log(data.user.id);
+            }
+     
+    };
+fetchData();
+}, [])
 
     const fetchSemesters = async (username:string) => {
         const {data, error} = await supabaseClient.from("users").select("semester").match({user:username});

@@ -13,7 +13,6 @@ export default function ClassGrid(props: {classes: {color:string, grade: number,
     const [username, setUsername] = useState('');
 
     useEffect(() => {
-        fetchCourses(username, props.currSemester);
     }, []);
 
     const fetchCourses = async (username:string, semesterName:string) => {
