@@ -1,19 +1,15 @@
 'use client'
 import { Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 export default function Home() {
-  const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASEURL!, process.env.NEXT_PUBLIC_APIKEY!);
-  const router = useRouter();
+  const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
 
-  const handleSignIn = async () => {
+  const handleSignIn = async () => 
     await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'random'
-      }
-    })
-  };
+        redirectTo: 'http://localhost:3000/homePage'
+      }});
 
   return (
     <div className = 'flex flex-col gap-40'>
