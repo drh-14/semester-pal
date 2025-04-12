@@ -3,48 +3,30 @@ import { Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import DialogBox from '@/components/DialogBox';
-import SyllabusItem from '@/components/SyllabusItem';
-export default function SyllabusBox(props: {categories: {name: string, weight: number}[]}){
-  const [courseID, setCourseID] = useState("");
+import SyllabusItem from '@/components/classPage/SyllabusItem';
+export default function SyllabusBox(props: {courseName: string, categories: {name: string, weight: number}[]}){
   const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
   const [syllabus, setSyllabus] = useState<{category:string, weight: number}[]>([]);
-  const [username, setUsername] = useState('');
-  const [semester, setSemester] = useState('');
-  const [course, setCourse] = useState('');
   const [editSyllabusOpen, setEditSyllabusOpen] = useState(false);
 
   useEffect(() => {
-    getSyllabus(username, semester, course);
+    fetchSyllabus();
   })
 
-  const getSyllabus = async (username:string, semesterName:string, courseName:string) => {
-    const { data, error } = await supabaseClient.from("courses").select('category, weight').match({user:username, semester: semesterName, course: courseName});
-    if(data){
-        setSyllabus(data);
-    }
-    if(error){
-      console.log(error);
-    }
+  const fetchSyllabus = async () => {
+    /* 
+    get fields from syllabi table 
+    */
+   
+    
 }
 
   const modifyCategory = async () => {
-    await fetch('/api/modifyDatabase/addAssignment')
+    // todo
   }
 
   const updateSyllabus = async () => {
-    if(syllabus.map(elem => elem.weight).reduce((acc, curr) => acc + curr, 0) === 100){
-      const res = await fetch('/api/modifyDatabase', {
-        method: "POST",
-        headers : {
-          "Content-Type":  "application/json"
-        },
-        body: JSON.stringify({syllabus: syllabus, courseID: courseID})
-
-      });
-      if(res.ok){
-        setEditSyllabusOpen(false);
-      }
-    }
+    // todo
   }
 
     return(

@@ -1,30 +1,22 @@
 'use client'
 import { Button } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DialogBox from '@/components/DialogBox';
 import {FormControlLabel, Checkbox, FormGroup} from '@mui/material';
-import { createClient } from '@supabase/supabase-js';
 export default function SemesterBar(props: {semesters: string[], currSemester:string, setCurrSemester: (argv:string) => void}){
     const [openAddSemester, setOpenAddSemester] = useState(false);
     const [openRemoveSemester, setOpenRemoveSemester] = useState(false);
     const [removedSemesters, setRemovedSemesters] = useState<string[]>([]);
-    const [semesters, setSemesters] = useState<string[]>([]);
-    const [username, setUsername] = useState('');
-    const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
+    const [newSemester, setNewSemester] = useState("");
 
-    useEffect(() => {
-    }, []);
+    const removeSemesters = async () => {
+        // todo
+    }
 
-    const fetchSemesters = async (username:string) => {
-            const {data, error} = await supabaseClient.from("users").select("semester").match({user:username});
-            if(data){
-                setSemesters(data.map(element => element.semester));
-            }
-            if(error){
-                console.log(error);
-            }
+    const addSemester = async () => {
+        // todo
     }
 
     return(
@@ -37,7 +29,7 @@ export default function SemesterBar(props: {semesters: string[], currSemester:st
             <Button onClick = {() => setOpenAddSemester(true)} sx={{padding: 0}}><AddIcon></AddIcon></Button>
             <DialogBox width = "60vh" height = "20vh" open = {openAddSemester} closeFunction = {() => setOpenAddSemester(false)}>
                 <div className = 'w-4/5 flex flex-col items-center gap-8'>
-                <input className = 'w-full p-4 border-2 border-black border-solid rounded-md' placeholder = 'Enter semester name'></input>
+                <input onChange = {(e) => setNewSemester(e.target.value)} className = 'w-full p-4 border-2 border-black border-solid rounded-md' placeholder = 'Enter semester name'></input>
                 <Button variant = 'contained'>Create Semester</Button>
                 </div>
             </DialogBox>

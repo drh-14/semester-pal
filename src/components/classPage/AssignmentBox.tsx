@@ -15,6 +15,18 @@ export default function AssignmentBox(props: {assignments: assignment[]}){
     const [assignmentGrade, setAssignmentGrade] = useState(0);
     const [assignmentCategory, setAssignmentCategory] = useState('');
 
+    const addAssignment = async () => {
+        // todo
+    }
+
+    const editAssignment = async () => {
+        // todo
+    }
+
+    const deleteAssignment = async () => {
+        // todo
+    }
+
     return(
         <div>
             <div className = 'w-full flex flex-col max-h-96 overflow-auto gap-4 items-center border-2 border-black border-solid p-4'>

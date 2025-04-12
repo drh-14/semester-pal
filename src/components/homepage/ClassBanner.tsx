@@ -4,19 +4,13 @@ import { useState } from 'react';
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 import { Button } from '@mui/material';
 import DialogBox from '@/components/DialogBox';
-export default function ClassBanner(props: {color: string, grade: number, courseName: string}){
+import { SupabaseClient } from '@supabase/supabase-js';
+export default function ClassBanner(props: {supabaseClient: SupabaseClient, userID: string, color: string, grade: number, courseName: string}){
     const router = useRouter();
     const [openDeleteClass, setOpenDeleteClass] = useState(false);
-    const [username, setUsername] = useState('');
-    const [semester, setSemester] = useState('');
 
     const deleteClass = async () => {
-        const response = await fetch('/api/modifyDatabase/removeClass', {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username: username, semesterName: semester, courseName: props.courseName})
-        });
-        setOpenDeleteClass(false);
+        // todo
     }
 
     return(

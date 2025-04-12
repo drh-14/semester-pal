@@ -1,32 +1,33 @@
 'use client'
 import Navbar from '@/components/Navbar';
-import AssignmentBox from '@/components/AssignmentBox';
-import SyllabusBox from '@/components/SyllabusBox';
+import AssignmentBox from '@/components/classPage/AssignmentBox';
+import SyllabusBox from '@/components/classPage/SyllabusBox';
 import { Button } from '@mui/material';
 import { useState, useEffect } from 'react'; 
 import { createClient } from '@supabase/supabase-js';
 import EditIcon from '@mui/icons-material/Edit';
 import DialogBox from '@/components/DialogBox';
+import { useSearchParams } from "next/navigation";
 export default function ClassPage(){
-    const [grade, setGrade] = useState();
+    const [grade, setGrade] = useState(0);
+    const [courseName, setCourseName] = useState("");
+    const [semesterName, setSemesterName] = useState("");
     const [openGradeCalculation, setOpenGradeCalculation] = useState(false);
-    const [assignments, setAssignments] = useState<{assignment:string, category:string, grade: number}[]>([]);
-    const [course, setCourse] = useState('');
-    const [semester, setSemester] = useState('');
+    const [assignments, setAssignments] = useState<{assignmentName:string, category:string, grade: number}[]>([]);
+    const [gradeCalculation, setGradeCalculation] = useState<{category: string, weight: number, grade: number}[]>([]);
+    const searchParams = useSearchParams();
+    const userID = searchParams.get("userID");
     const supabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
-    const [username, setUsername] = useState('');
-    const [gradeCalculation, setGradeCalculation] = useState<{grade: number, category: string}[]>([]);
-    const [gradingBreakdown, setGradingBreakdown] = useState<{category:string, weight: number}[]>([]);
 
     useEffect(() => {
-        getFinalGrade(username, semester, course);
-        fetchAssignments(username, semester, course);
-        getGradeCalculation(username, semester, course);
+        getGrade();
+        getAssignments();
+        getGradeCalculation();
     }, []);
     
-    const getFinalGrade = async (username:string, semesterName:string, courseName: string) => {
-        const {data, error} = await supabaseClient.from("users").select('grade').match({user:username, semester: semesterName, course: courseName});
-        if(data){
+    const getGrade = async () => {
+        const {data, error} = await supabaseClient.from("courses").select('grade').match({userID: userID, semesterName: semesterName, courseName: courseName});
+        if(data && data[0]){
             setGrade(data[0].grade);
         }
         if(error){
@@ -34,19 +35,18 @@ export default function ClassPage(){
         }
     };
 
-    const fetchAssignments = async (username:string, semesterName:string, courseName: string) => {
-        const {data, error} = await supabaseClient.from("assignments").select('assignment, grade, category').match({user: username, semester: semesterName, course: courseName})
+    const getAssignments = async () => {
+        const {data, error} = await supabaseClient.from("assignments").select('assignmentName, grade, category').match({userID: userID, semesterName: semesterName, courseName: courseName})
         if(data){
             setAssignments(data);
-
         }
         if(error){
             console.log(error);
         }
     };
 
-    const getGradeCalculation = async (username:string, semesterName:string, courseName:string) => {
-        const {data, error} = await supabaseClient.from("courses").select('category, grade').match({user: username, semester: semesterName, course: courseName});
+    const getGradeCalculation = async () => {
+        const {data, error} = await supabaseClient.from("syllabi").select('category, weight, grade').match({userID: userID, semesterName: semesterName, courseName: courseName});
         if(data){
             setGradeCalculation(data);
         }
@@ -54,7 +54,6 @@ export default function ClassPage(){
             console.log(error);
         }
     }
-
 
     return(
         <div className = 'flex flex-col gap-8 items-center text-4xl'>
@@ -71,7 +70,7 @@ export default function ClassPage(){
                 </div>
             </DialogBox>
             <AssignmentBox assignments={[{name: 'HW1', grade: 95, category: 'Homework'}]}></AssignmentBox>
-            <SyllabusBox categories = {[{name: 'Homework', weight: 35}, {name: 'Midterm', weight: 50}]}></SyllabusBox>
+            <SyllabusBox courseName = "" categories = {[{name: 'Homework', weight: 35}, {name: 'Midterm', weight: 50}]}></SyllabusBox>
         </div>
     )   
 }

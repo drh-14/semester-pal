@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '@mui/material';
 import {useState } from 'react';
-import DialogBox from './DialogBox';
+import DialogBox from '../DialogBox';
 type syllabusItemProps = { category: string, weight: number };
 export default function SyllabusItem(props: { syllabusItem: syllabusItemProps, syllabus: syllabusItemProps[], setSyllabus: React.Dispatch<React.SetStateAction<syllabusItemProps[]>> }) {
     const [editOpen, setEditOpen] = useState(false);
